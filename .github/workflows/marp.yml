@@ -1,0 +1,21 @@
+name: Build Slides
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build with Marp
+        uses: docker://marpteam/marp-cli:latest
+        with:
+          args: slides.md -o index.html --html
+        env:
+          MARP_USER: root:root
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
